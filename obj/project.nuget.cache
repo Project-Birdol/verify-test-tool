@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "iiu6v5f8gYXfx6ebShbpXWMaEJhs0OtOg7/bUwWHcH86mO4wr3seD/DhSJ/jJT+joiAh9UWKkEXXioZg717L1Q==",
+  "success": true,
+  "projectFilePath": "/home/nanami/Repositories/signing-cs/signing-cs.csproj",
+  "expectedPackageFiles": [
+    "/home/nanami/.nuget/packages/microsoft.netcore.app.runtime.linux-x64/5.0.8/microsoft.netcore.app.runtime.linux-x64.5.0.8.nupkg.sha512",
+    "/home/nanami/.nuget/packages/microsoft.aspnetcore.app.runtime.linux-x64/5.0.8/microsoft.aspnetcore.app.runtime.linux-x64.5.0.8.nupkg.sha512",
+    "/home/nanami/.nuget/packages/microsoft.netcore.app.host.linux-x64/5.0.8/microsoft.netcore.app.host.linux-x64.5.0.8.nupkg.sha512",
+    "/home/nanami/.nuget/packages/microsoft.aspnetcore.app.ref/5.0.0/microsoft.aspnetcore.app.ref.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
