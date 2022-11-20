@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
 using System.IO;
@@ -13,7 +12,7 @@ namespace signing_cs
             RSACryptoServiceProvider csp = new RSACryptoServiceProvider();
             string privatekey = File.ReadAllText(keyfile);
             csp.FromXmlString(privatekey);
-            byte[] signature = csp.SignData(Encoding.UTF8.GetBytes(input), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            byte[] signature = csp.SignData(Encoding.UTF8.GetBytes(input), HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1);
             Console.WriteLine(BitConverter.ToString(signature).Replace("-", "").ToLower());
         }
     }

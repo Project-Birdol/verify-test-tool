@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Security.Cryptography;
@@ -10,7 +9,7 @@ namespace signing_cs
     {
         public static void CreateKeyPair(string name)
         {
-            int size = 1024;
+            int size = 4096;
             RSACryptoServiceProvider csp = new RSACryptoServiceProvider(size);
             string publicKey = csp.ToXmlString(false);
             string privateKey = csp.ToXmlString(true);
