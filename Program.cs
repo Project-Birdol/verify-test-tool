@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Security.Cryptography;
 
 namespace BirdolCrypt
@@ -30,22 +29,22 @@ namespace BirdolCrypt
                             case "rsa-1024":
                                 CryptoProvider CryptoRsa1024 = new CryptoProvider(KeyType.RSA1024);
                                 CryptoRsa1024.ExportPrivKeyFile(name);
-                                Console.WriteLine(CryptoRsa1024.PubKey);
+                                Console.Write(CryptoRsa1024.PubKey);
                                 break;
                             case "rsa-2048":
                                 CryptoProvider CryptoRsa2048 = new CryptoProvider(KeyType.RSA2048);
                                 CryptoRsa2048.ExportPrivKeyFile(name);
-                                Console.WriteLine(CryptoRsa2048.PubKey);
+                                Console.Write(CryptoRsa2048.PubKey);
                                 break;
                             case "rsa-4096":
                                 CryptoProvider CryptoRsa4096 = new CryptoProvider(KeyType.RSA4096);
                                 CryptoRsa4096.ExportPrivKeyFile(name);
-                                Console.WriteLine(CryptoRsa4096.PubKey);
+                                Console.Write(CryptoRsa4096.PubKey);
                                 break;
                             case "ecdsa":
                                 CryptoProvider CryptoEcdsa = new CryptoProvider(KeyType.ECDSA);
                                 CryptoEcdsa.ExportPrivKeyFile(name);
-                                Console.WriteLine(CryptoEcdsa.PubKey);
+                                Console.Write(CryptoEcdsa.PubKey);
                                 break;
                             default:
                                 Console.Error.WriteLine("** Error: invalid keytype specified");
@@ -104,19 +103,19 @@ namespace BirdolCrypt
                         {
                             case "rsa-1024":
                                 CryptoProvider CryptoRsa1024 = new CryptoProvider(KeyType.RSA1024, keyfile);
-                                Console.WriteLine(Convert.ToHexString(CryptoRsa1024.Sign(input, HashAlgorithmName.SHA512)));
+                                Console.Write(Convert.ToHexString(CryptoRsa1024.Sign(input, HashAlgorithmName.SHA512)));
                                 break;
                             case "rsa-2048":
                                 CryptoProvider CryptoRsa2048 = new CryptoProvider(KeyType.RSA2048, keyfile);
-                                Console.WriteLine(Convert.ToHexString(CryptoRsa2048.Sign(input, HashAlgorithmName.SHA512)));
+                                Console.Write(Convert.ToHexString(CryptoRsa2048.Sign(input, HashAlgorithmName.SHA512)));
                                 break;
                             case "rsa-4096":
                                 CryptoProvider CryptoRsa4096 = new CryptoProvider(KeyType.RSA4096, keyfile);
-                                Console.WriteLine(Convert.ToHexString(CryptoRsa4096.Sign(input, HashAlgorithmName.SHA512)));
+                                Console.Write(Convert.ToHexString(CryptoRsa4096.Sign(input, HashAlgorithmName.SHA512)));
                                 break;
                             case "ecdsa":
                                 CryptoProvider CryptoEcdsa = new CryptoProvider(KeyType.ECDSA, keyfile);
-                                Console.WriteLine(Convert.ToHexString(CryptoEcdsa.Sign(input, HashAlgorithmName.SHA512)));
+                                Console.Write(Convert.ToHexString(CryptoEcdsa.Sign(input, HashAlgorithmName.SHA512)));
                                 break;
                             default:
                                 Console.Error.WriteLine("** Error: invalid keytype specified");
