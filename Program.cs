@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 
 namespace BirdolCrypt
 {
@@ -103,19 +102,19 @@ namespace BirdolCrypt
                         {
                             case "rsa-1024":
                                 CryptoProvider CryptoRsa1024 = new CryptoProvider(KeyType.RSA1024, keyfile);
-                                Console.Write(Convert.ToHexString(CryptoRsa1024.Sign(input, HashAlgorithmName.SHA512)));
+                                Console.Write(Convert.ToHexString(CryptoRsa1024.Sign(input)));
                                 break;
                             case "rsa-2048":
                                 CryptoProvider CryptoRsa2048 = new CryptoProvider(KeyType.RSA2048, keyfile);
-                                Console.Write(Convert.ToHexString(CryptoRsa2048.Sign(input, HashAlgorithmName.SHA512)));
+                                Console.Write(Convert.ToHexString(CryptoRsa2048.Sign(input)));
                                 break;
                             case "rsa-4096":
                                 CryptoProvider CryptoRsa4096 = new CryptoProvider(KeyType.RSA4096, keyfile);
-                                Console.Write(Convert.ToHexString(CryptoRsa4096.Sign(input, HashAlgorithmName.SHA512)));
+                                Console.Write(Convert.ToHexString(CryptoRsa4096.Sign(input)));
                                 break;
                             case "ecdsa":
                                 CryptoProvider CryptoEcdsa = new CryptoProvider(KeyType.ECDSA, keyfile);
-                                Console.Write(Convert.ToHexString(CryptoEcdsa.Sign(input, HashAlgorithmName.SHA512)));
+                                Console.Write(Convert.ToHexString(CryptoEcdsa.Sign(input)));
                                 break;
                             default:
                                 Console.Error.WriteLine("** Error: invalid keytype specified");
@@ -156,7 +155,7 @@ namespace BirdolCrypt
                                 Console.Error.WriteLine("Available keytype: rsa-1024, rsa-2048, rsa-4096, ecdsa");
                                 return 1;
                         }
-                        if (Crypto.Verify(msg, signature, HashAlgorithmName.SHA512))
+                        if (Crypto.Verify(msg, signature))
                         {
                             Console.WriteLine("This signature is valid!");
                             return 0;

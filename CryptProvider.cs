@@ -19,7 +19,7 @@ namespace BirdolCrypt
     class CryptoProvider
     {
         private KeyType keyType;
-        private ECDsa dsa;
+        private (EllipticCurve.PrivateKey, EllipticCurve.PublicKey) ecdsa;
         private RSACryptoServiceProvider rsa;
 
         private string privKeyStr;
@@ -73,7 +73,7 @@ namespace BirdolCrypt
                     File.WriteAllText(filename + ".priv", rsaPrivKey);
                     break;
                 case KeyType.ECDSA:
-                    byte[] dsaPrivKey = dsa.ExportPkcs8PrivateKey();
+                    byte[] dsaPrivKey = ecdsa.Item1.toDer();
                     File.WriteAllBytes(filename + ".priv", dsaPrivKey);
                     break;
                 default:
@@ -94,7 +94,7 @@ namespace BirdolCrypt
                     File.WriteAllText(filename + ".pub", rsaPubKey);
                     break;
                 case KeyType.ECDSA:
-                    byte[] dsaPubKey = dsa.ExportSubjectPublicKeyInfo();
+                    byte[] dsaPubKey = ecdsa.Item2.toDer();
                     File.WriteAllBytes(filename + ".pub", dsaPubKey);
                     break;
                 default:
@@ -157,18 +157,18 @@ namespace BirdolCrypt
             }
         }
 
-        public byte[] Sign(string msg, HashAlgorithmName hashAlgo)
+        public byte[] Sign(string msg)
         {
             switch (this.keyType)
             {
                 case KeyType.RSA1024:
                 case KeyType.RSA2048:
                 case KeyType.RSA4096:
-                    byte[] rsaSig = rsa.SignData(Encoding.UTF8.GetBytes(msg), hashAlgo, RSASignaturePadding.Pkcs1);
+                    byte[] rsaSig = rsa.SignData(Encoding.UTF8.GetBytes(msg), HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1);
                     return rsaSig;
                 case KeyType.ECDSA:
-                    byte[] dsaSig = dsa.SignData(Encoding.UTF8.GetBytes(msg), hashAlgo);
-                    return dsaSig;
+                    EllipticCurve.Signature dsaSig = EllipticCurve.Ecdsa.sign(msg, this.ecdsa.Item1);
+                    return dsaSig.toDer();
                 default:
                     Console.Error.WriteLine("Invalid KeyType");
                     Environment.Exit(1);
@@ -176,16 +176,17 @@ namespace BirdolCrypt
             } 
         }
 
-        public bool Verify(string msg, string signature, HashAlgorithmName hashAlgo)
+        public bool Verify(string msg, string signature)
         {
             switch (this.keyType)
             {
                 case KeyType.RSA1024:
                 case KeyType.RSA2048:
                 case KeyType.RSA4096:
-                    return rsa.VerifyData(Encoding.UTF8.GetBytes(msg), hexStringToBytes(signature), hashAlgo, RSASignaturePadding.Pkcs1);
+                    return rsa.VerifyData(Encoding.UTF8.GetBytes(msg), hexStringToBytes(signature), HashAlgorithmName.SHA512, RSASignaturePadding.Pkcs1);
                 case KeyType.ECDSA:
-                    return dsa.VerifyData(Encoding.UTF8.GetBytes(msg), hexStringToBytes(signature), hashAlgo); 
+                    EllipticCurve.Signature dsaSig = EllipticCurve.Signature.fromDer(hexStringToBytes(signature));
+                    return EllipticCurve.Ecdsa.verify(msg, dsaSig, this.ecdsa.Item2); 
                 default:
                     Console.Error.WriteLine("** Error: invalid keytype");
                     return false;
@@ -217,11 +218,10 @@ namespace BirdolCrypt
             switch (this.keyType)
             {
                 case KeyType.ECDSA:
-                    dsa = ECDsa.Create();
-                    int size;
-                    dsa.ImportPkcs8PrivateKey(privKey, out size);
-                    this.privKeyStr = Convert.ToHexString(dsa.ExportPkcs8PrivateKey()); 
-                    this.pubKeyStr = Convert.ToHexString(dsa.ExportSubjectPublicKeyInfo());
+                    EllipticCurve.PrivateKey dsaPrivkey = EllipticCurve.PrivateKey.fromDer(privKey);
+                    this.ecdsa = (dsaPrivkey, dsaPrivkey.publicKey());
+                    this.privKeyStr = Convert.ToHexString(ecdsa.Item1.toDer()); 
+                    this.pubKeyStr = Convert.ToHexString(ecdsa.Item2.toDer());
                     break;
                 case KeyType.RSA1024:
                 case KeyType.RSA2048:
@@ -244,10 +244,9 @@ namespace BirdolCrypt
             switch (this.keyType)
             {
                 case KeyType.ECDSA:
-                    dsa = ECDsa.Create();
-                    int size;
-                    dsa.ImportSubjectPublicKeyInfo(pubKey, out size);
-                    this.pubKeyStr = Convert.ToHexString(dsa.ExportSubjectPublicKeyInfo());
+                    EllipticCurve.PublicKey dsaPubkey = EllipticCurve.PublicKey.fromDer(pubKey);
+                    this.ecdsa = (null, dsaPubkey);
+                    this.pubKeyStr = Convert.ToHexString(ecdsa.Item2.toDer());
                     break;
                 case KeyType.RSA1024:
                 case KeyType.RSA2048:
@@ -285,9 +284,10 @@ namespace BirdolCrypt
                     this.pubKeyStr = Convert.ToBase64String(Encoding.UTF8.GetBytes(rsa.ToXmlString(false)));
                     break;
                 case KeyType.ECDSA:
-                    this.dsa = ECDsa.Create();
-                    this.privKeyStr = Convert.ToHexString(dsa.ExportPkcs8PrivateKey()); 
-                    this.pubKeyStr = Convert.ToHexString(dsa.ExportSubjectPublicKeyInfo());
+                    var privKey = new EllipticCurve.PrivateKey("p256");
+                    this.ecdsa = (privKey, privKey.publicKey());
+                    this.privKeyStr = Convert.ToHexString(ecdsa.Item1.toDer()); 
+                    this.pubKeyStr = Convert.ToHexString(ecdsa.Item2.toDer());
                     break;
                 case KeyType.None:
                     break;
