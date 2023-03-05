@@ -284,7 +284,7 @@ namespace BirdolCrypt
                     this.pubKeyStr = Convert.ToBase64String(Encoding.UTF8.GetBytes(rsa.ToXmlString(false)));
                     break;
                 case KeyType.ECDSA:
-                    var privKey = new EllipticCurve.PrivateKey("p256");
+                    var privKey = new EllipticCurve.PrivateKey("secp256k1");
                     this.ecdsa = (privKey, privKey.publicKey());
                     this.privKeyStr = Convert.ToHexString(ecdsa.Item1.toDer()); 
                     this.pubKeyStr = Convert.ToHexString(ecdsa.Item2.toDer());
